@@ -30,7 +30,7 @@ check_dependencies() {
 }
 
 auto_groups_data() {
-  hcl2json rules.tf | jq -r '..|.auto_groups?|values|.default'
+  hcl2json rules.tf | jq -r '..|.auto_groups?|values|.[0].default'
 }
 
 auto_groups_keys() {
@@ -218,7 +218,7 @@ EOF
 \`\`\`hcl
 module "${group/-/_}_security_group" {
   source  = "terraform-aws-modules/security-group/aws//modules/${group}"
-  version = "~> 4.0"
+  version = "~> 5.0"
 
   # omitted...
 }

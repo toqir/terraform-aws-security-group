@@ -28,6 +28,7 @@ variable "rules" {
     # Consul
     consul-tcp             = [8300, 8300, "tcp", "Consul server"]
     consul-grpc-tcp        = [8502, 8502, "tcp", "Consul gRPC"]
+    consul-grpc-tcp-tls    = [8503, 8503, "tcp", "Consul gRPC TLS"]
     consul-webui-http-tcp  = [8500, 8500, "tcp", "Consul web UI HTTP"]
     consul-webui-https-tcp = [8501, 8501, "tcp", "Consul web UI HTTPS"]
     consul-dns-tcp         = [8600, 8600, "tcp", "Consul DNS"]
@@ -96,6 +97,9 @@ variable "rules" {
     ldaps-tcp = [636, 636, "tcp", "LDAPS"]
     # Logstash
     logstash-tcp = [5044, 5044, "tcp", "Logstash"]
+    # Loki
+    loki-grafana      = [3100, 3100, "tcp", "Grafana Loki endpoint"]
+    loki-grafana-grpc = [9095, 9095, "tcp", "Grafana Loki GRPC"]
     # Memcached
     memcached-tcp = [11211, 11211, "tcp", "Memcached"]
     # MinIO
@@ -131,6 +135,8 @@ variable "rules" {
     prometheus-http-tcp               = [9090, 9090, "tcp", "Prometheus"]
     prometheus-pushgateway-http-tcp   = [9091, 9091, "tcp", "Prometheus Pushgateway"]
     prometheus-node-exporter-http-tcp = [9100, 9100, "tcp", "Prometheus Node Exporter"]
+    # Promtail
+    promtail-http = [9080, 9080, "tcp", "Promtail endpoint"]
     # Oracle Database
     oracle-db-tcp = [1521, 1521, "tcp", "Oracle"]
     # Octopus Tentacles
@@ -242,7 +248,7 @@ variable "auto_groups" {
       egress_rules      = ["all-all"]
     }
     consul = {
-      ingress_rules     = ["consul-tcp", "consul-grpc-tcp", "consul-webui-http-tcp", "consul-webui-https-tcp", "consul-dns-tcp", "consul-dns-udp", "consul-serf-lan-tcp", "consul-serf-lan-udp", "consul-serf-wan-tcp", "consul-serf-wan-udp"]
+      ingress_rules     = ["consul-tcp", "consul-grpc-tcp", "consul-grpc-tcp-tls", "consul-webui-http-tcp", "consul-webui-https-tcp", "consul-dns-tcp", "consul-dns-udp", "consul-serf-lan-tcp", "consul-serf-lan-udp", "consul-serf-wan-tcp", "consul-serf-wan-udp"]
       ingress_with_self = ["all-all"]
       egress_rules      = ["all-all"]
     }
@@ -336,6 +342,11 @@ variable "auto_groups" {
       ingress_with_self = ["all-all"]
       egress_rules      = ["all-all"]
     }
+    loki = {
+      ingress_rules     = ["loki-grafana", "loki-grafana-grpc"]
+      ingress_with_self = ["all-all"]
+      egress_rules      = ["all-all"]
+    }
     memcached = {
       ingress_rules     = ["memcached-tcp"]
       ingress_with_self = ["all-all"]
@@ -401,6 +412,11 @@ variable "auto_groups" {
       ingress_with_self = ["all-all"]
       egress_rules      = ["all-all"]
     }
+    promtail = {
+      ingress_rules     = ["promtail-http"]
+      ingress_with_self = ["all-all"]
+      egress_rules      = ["all-all"]
+    }
     rabbitmq = {
       ingress_rules     = ["rabbitmq-4369-tcp", "rabbitmq-5671-tcp", "rabbitmq-5672-tcp", "rabbitmq-15672-tcp", "rabbitmq-25672-tcp"]
       ingress_with_self = ["all-all"]
@@ -442,7 +458,7 @@ variable "auto_groups" {
       egress_rules      = ["all-all"]
     }
     splunk = {
-      ingress_rules     = ["splunk-indexer-tcp", "splunk-clients-tcp", "splunk-splunkd-tcp", "splunk-hec-tcp"]
+      ingress_rules     = ["splunk-indexer-tcp", "splunk-web-tcp", "splunk-splunkd-tcp", "splunk-hec-tcp"]
       ingress_with_self = ["all-all"]
       egress_rules      = ["all-all"]
     }
